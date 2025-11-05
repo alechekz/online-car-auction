@@ -1,0 +1,33 @@
+version: "2"
+
+linters:
+  # Default set of linters.
+  # The value can be:
+  # - `standard`: https://golangci-lint.run/docs/linters/#enabled-by-default
+  # - `all`: enables all linters by default.
+  # - `none`: disables all linters by default.
+  # - `fast`: enables only linters considered as "fast" (`golangci-lint help linters --json | jq '[ .[] | select(.fast==true) ] | map(.name)'`).
+  # Default: standard
+  default: none
+  # Enable specific linter.
+  enable:
+    - unused
+    - errcheck
+    - ineffassign
+    - govet
+    - staticcheck
+    # - gosec
+    # - cyclop
+
+# Excluding configuration per-path, per-linter, per-text and per-source.
+  exclusions:
+    rules:
+      - path: '(.+)_test\.go'
+        linters:
+          - errcheck
+          - staticcheck
+
+# Turn off output limiting
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

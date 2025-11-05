@@ -1,0 +1,34 @@
+mkdir services
+
+mkdir services/vehicle
+mkdir services/vehicle/cmd
+mkdir services/vehicle/domain
+mkdir services/vehicle/usecase
+mkdir services/vehicle/repository/
+mkdir services/vehicle/infrastructure
+mkdir services/vehicle/delivery
+mkdir services/vehicle/delivery/http
+cd services/vehicle
+go mod init github.com/alechekz/online-car-auction/services/vehicle
+
+mkdir services/inspection
+mkdir services/inspection/cmd
+mkdir services/inspection/domain
+mkdir services/inspection/usecase
+mkdir services/inspection/repository/
+mkdir services/inspection/infrastructure
+mkdir services/inspection/delivery
+mkdir services/inspection/delivery/http
+cd services/inspection
+go mod init github.com/alechekz/online-car-auction/services/inspection
+
+mkdir services/vehicle
+mkdir services/vehicle/cmd
+mkdir services/vehicle/domain
+mkdir services/vehicle/usecase
+mkdir services/vehicle/repository/
+mkdir services/vehicle/infrastructure
+mkdir services/vehicle/delivery
+mkdir services/vehicle/delivery/http
+cd services/vehicle
+go mod init github.com/alechekz/online-car-auction/services/vehicle
