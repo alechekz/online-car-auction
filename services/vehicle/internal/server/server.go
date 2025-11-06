@@ -43,3 +43,8 @@ func (s *Server) Stop() error {
 	fmt.Println("Shutting down server...")
 	return s.httpServer.Close()
 }
+
+// Handler returns the HTTP handler of the server
+func (s *Server) Handler() http.Handler {
+	return s.httpServer.Handler
+}

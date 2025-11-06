@@ -193,3 +193,65 @@ func TestVehicleHandler_DeleteVehicle(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, rec.Code)
 	})
 }
+
+// TestVehicleHandler_ListVehicles tests the ListVehicles HTTP handler
+func TestVehicleHandler_ListVehicles(t *testing.T) {
+
+	// Prepare router with vehicles
+	router := newTestRouter()
+	v1 := domain.Vehicle{
+		VIN:      "VIN12345678901234",
+		Year:     2020,
+		Odometer: 10000,
+		MSRP:     20000,
+	}
+	v2 := domain.Vehicle{
+		VIN:      "VIN23456789012345",
+		Year:     2021,
+		Odometer: 5000,
+		MSRP:     22000,
+	}
+	for _, v := range []domain.Vehicle{v1, v2} {
+		body, _ := json.Marshal(v)
+		req := httptest.NewRequest(http.MethodPost, "/vehicles", bytes.NewReader(body))
+		req.Header.Set("Content-Type", "application/json")
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+		assert.Equal(t, http.StatusCreated, rec.Code)
+	}
+
+	// Not empty list case
+	t.Run("list all vehicles", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/vehicles", nil)
+		rec := httptest.NewRecorder()
+
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		var got []domain.Vehicle
+		err := json.Unmarshal(rec.Body.Bytes(), &got)
+		assert.NoError(t, err)
+		assert.Len(t, got, 2)
+
+		vins := []string{got[0].VIN, got[1].VIN}
+		assert.Contains(t, vins, v1.VIN)
+		assert.Contains(t, vins, v2.VIN)
+	})
+
+	// Empty list case
+	t.Run("list empty vehicles", func(t *testing.T) {
+		router := newTestRouter()
+		req := httptest.NewRequest(http.MethodGet, "/vehicles", nil)
+		rec := httptest.NewRecorder()
+
+		router.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		var got []domain.Vehicle
+		err := json.Unmarshal(rec.Body.Bytes(), &got)
+		assert.NoError(t, err)
+		assert.Len(t, got, 0)
+	})
+}
