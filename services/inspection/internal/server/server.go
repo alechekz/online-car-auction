@@ -8,7 +8,6 @@ import (
 	vehiclehttp "github.com/alechekz/online-car-auction/services/inspection/delivery/http"
 	"github.com/alechekz/online-car-auction/services/inspection/infrastructure"
 	"github.com/alechekz/online-car-auction/services/inspection/internal/logger"
-	"github.com/alechekz/online-car-auction/services/inspection/repository"
 	"github.com/alechekz/online-car-auction/services/inspection/usecase"
 )
 
@@ -21,21 +20,8 @@ type Server struct {
 func NewServer(cfg *config) (*Server, error) {
 
 	// dependencies
-	var repo repository.InspectionRepository
-	switch cfg.Repo {
-	case "postgres":
-		logger.Log.Info("using postgres inspection repository")
-		var err error
-		repo, err = infrastructure.NewPostgresInspectionRepo(cfg.DatabaseURL)
-		if err != nil {
-			logger.Log.Error("failed to connect to postgres", slog.String("error", err.Error()))
-		}
-	default:
-		logger.Log.Info("using in-memory inspection repository")
-		repo = infrastructure.NewMemoryInspectionRepo()
-	}
 	provider := infrastructure.NewNHTSABuildDataClient()
-	uc := usecase.NewInspectionUC(repo, provider)
+	uc := usecase.NewInspectionUC(provider)
 	handler := &vehiclehttp.InspectionHandler{UC: uc}
 	mux := vehiclehttp.NewRouter(handler)
 

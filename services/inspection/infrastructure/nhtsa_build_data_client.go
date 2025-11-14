@@ -29,11 +29,11 @@ type vpicResponse struct {
 }
 
 // Fetch fetches the build data for a vehicle by its VIN
-func (c *NHTSABuildDataClient) Fetch(buildData *domain.BuildData) error {
+func (c *NHTSABuildDataClient) Fetch(v *domain.Vehicle) error {
 
 	// Make the HTTP request to NHTSA API
 	resp, err := http.Get(
-		fmt.Sprintf("%s/DecodeVin/%s?format=json", c.baseURL, buildData.VIN),
+		fmt.Sprintf("%s/DecodeVin/%s?format=json", c.baseURL, v.VIN),
 	)
 	if err != nil {
 		return err
@@ -48,11 +48,11 @@ func (c *NHTSABuildDataClient) Fetch(buildData *domain.BuildData) error {
 	for _, r := range data.Results {
 		switch r.Variable {
 		case "Make":
-			buildData.Brand = r.Value
+			v.Brand = r.Value
 		case "Engine Model":
-			buildData.Engine = r.Value
+			v.Engine = r.Value
 		case "Transmission Style":
-			buildData.Transmission = r.Value
+			v.Transmission = r.Value
 		}
 	}
 	return nil

@@ -25,9 +25,8 @@ func TestMain(m *testing.M) {
 
 // newTestRouter creates a test HTTP router with in-memory dependencies
 func newTestRouter() http.Handler {
-	repo := infrastructure.NewMemoryInspectionRepo()
 	provider := infrastructure.NewNHTSABuildDataClient()
-	uc := usecase.NewInspectionUC(repo, provider)
+	uc := usecase.NewInspectionUC(provider)
 	handler := &inspectionhttp.InspectionHandler{UC: uc}
 	return inspectionhttp.NewRouter(handler)
 }
@@ -38,7 +37,7 @@ func TestHandler_InspectVehicle(t *testing.T) {
 
 	// Valid case
 	t.Run("valid request", func(t *testing.T) {
-		v := domain.Inspection{
+		v := domain.Vehicle{
 			VIN:      "1HGCM82633A123456",
 			Year:     2020,
 			Odometer: 15000,

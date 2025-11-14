@@ -40,7 +40,7 @@ func writeError(w http.ResponseWriter, err error) {
 
 // POST /inspections/inspect
 func (h *InspectionHandler) InspectVehicle(w http.ResponseWriter, r *http.Request) {
-	var v domain.Inspection
+	var v domain.Vehicle
 	if err := json.NewDecoder(r.Body).Decode(&v); err != nil {
 		writeError(w, domain.ErrValidation)
 		return

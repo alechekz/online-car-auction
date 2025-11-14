@@ -13,13 +13,13 @@ import (
 // test is a struct for inspection usecase tests
 type test struct {
 	name    string
-	data    func() *domain.Inspection
+	data    func() *domain.Vehicle
 	isValid bool
 }
 
-// newTestInspection is a test valid vehicle instance
-func newTestInspection() *domain.Inspection {
-	return &domain.Inspection{
+// newTestVehicle is a test valid vehicle instance
+func newTestVehicle() *domain.Vehicle {
+	return &domain.Vehicle{
 		VIN:      "1HGCM82633A123456",
 		Year:     2022,
 		Odometer: 15000,
@@ -33,26 +33,25 @@ func TestInspectionUsecase_InspectVehicle(t *testing.T) {
 	tests := []test{
 		{
 			name: "valid inspection",
-			data: func() *domain.Inspection {
-				return newTestInspection()
+			data: func() *domain.Vehicle {
+				return newTestVehicle()
 			},
 			isValid: true,
 		},
 		{
 			name: "invalid VIN",
-			data: func() *domain.Inspection {
-				i := newTestInspection()
-				i.VIN = "123"
-				return i
+			data: func() *domain.Vehicle {
+				v := newTestVehicle()
+				v.VIN = "123"
+				return v
 			},
 			isValid: false,
 		},
 	}
 
 	// Prepare in-memory repository and usecase
-	repo := infrastructure.NewMemoryInspectionRepo()
 	provider := infrastructure.NewNHTSABuildDataClient()
-	uc := usecase.NewInspectionUC(repo, provider)
+	uc := usecase.NewInspectionUC(provider)
 
 	// Run tests
 	for _, test := range tests {
