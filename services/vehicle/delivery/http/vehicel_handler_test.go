@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,11 +13,18 @@ import (
 	vehiclehttp "github.com/alechekz/online-car-auction/services/vehicle/delivery/http"
 	"github.com/alechekz/online-car-auction/services/vehicle/domain"
 	"github.com/alechekz/online-car-auction/services/vehicle/infrastructure"
+	"github.com/alechekz/online-car-auction/services/vehicle/internal/logger"
 	"github.com/alechekz/online-car-auction/services/vehicle/usecase"
 )
 
+// TestMain sets up the testing environment
+func TestMain(m *testing.M) {
+	logger.Init()
+	os.Exit(m.Run())
+}
+
 // newTestRouter creates a test HTTP router with in-memory dependencies
-func newTestRouter() *http.ServeMux {
+func newTestRouter() http.Handler {
 	repo := infrastructure.NewMemoryVehicleRepo()
 	uc := usecase.NewVehicleUC(repo)
 	handler := &vehiclehttp.VehicleHandler{UC: uc}

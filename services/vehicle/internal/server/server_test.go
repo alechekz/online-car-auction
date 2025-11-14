@@ -3,18 +3,26 @@ package server_test
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
+	"github.com/alechekz/online-car-auction/services/vehicle/internal/logger"
 	"github.com/alechekz/online-car-auction/services/vehicle/internal/server"
 	"github.com/stretchr/testify/assert"
 )
 
-// TestNewServer_HandlerResponds checks that the server's handler responds to requests
-func TestNewServer_HandlerResponds(t *testing.T) {
-	cfg := server.NewConfig(":1111")
-	srv := server.NewServer(cfg)
+// TestMain sets up the testing environment
+func TestMain(m *testing.M) {
+	logger.Init()
+	os.Exit(m.Run())
+}
 
-	req := httptest.NewRequest(http.MethodGet, "/vehicles", nil)
+// TestNewServer_HandlerResponds checks that the demo server's handler responds to requests
+func TestNewServer_HandlerResponds(t *testing.T) {
+	cfg := server.NewConfig()
+	srv, _ := server.NewServer(cfg)
+
+	req := httptest.NewRequest(http.MethodGet, "/health", nil)
 	rec := httptest.NewRecorder()
 
 	srv.Handler().ServeHTTP(rec, req)

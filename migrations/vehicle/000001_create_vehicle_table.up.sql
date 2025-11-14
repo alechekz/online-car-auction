@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+  vin VARCHAR(17) PRIMARY KEY,
+  year INT NOT NULL,
+  msrp NUMERIC NOT NULL,
+  odometer INT NOT NULL
+);

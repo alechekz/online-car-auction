@@ -1,11 +1,12 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/alechekz/online-car-auction/services/vehicle/internal/logger"
 	"github.com/alechekz/online-car-auction/services/vehicle/internal/server"
 )
 
@@ -13,8 +14,13 @@ import (
 func main() {
 
 	// Prepare server
-	cfg := server.NewConfig(":" + os.Getenv("VEHICLE_PORT"))
-	srv := server.NewServer(cfg)
+	logger.Init()
+	cfg := server.NewConfig()
+	srv, err := server.NewServer(cfg)
+	if err != nil {
+		logger.Log.Error("failed to create server", slog.String("error", err.Error()))
+		return
+	}
 
 	// Graceful shutdown handling
 	stop := make(chan os.Signal, 1)
@@ -23,14 +29,14 @@ func main() {
 	// Start server in a separate goroutine
 	go func() {
 		if err := srv.Start(); err != nil {
-			log.Fatalf("server error: %v", err)
+			logger.Log.Error("failed to start server", slog.String("error", err.Error()))
 		}
 	}()
 
 	// Wait for interrupt signal to gracefully shutdown the server
 	<-stop
 	if err := srv.Stop(); err != nil {
-		log.Fatalf("shutdown error: %v", err)
+		logger.Log.Error("failed to stop server", slog.String("error", err.Error()))
 	}
 
 }

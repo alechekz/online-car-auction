@@ -18,10 +18,10 @@ type test struct {
 // newTestVehicle is a test valid vehicle instance
 func newTestVehicle() *domain.Vehicle {
 	return &domain.Vehicle{
-		VIN:      "1HGCM82633A123456",
-		Year:     2020,
-		Odometer: 15000,
-		MSRP:     25000.00,
+		VIN:      "1HGBH41JXMN109186",
+		Year:     2022,
+		MSRP:     25999.99,
+		Odometer: 12000,
 	}
 }
 

@@ -9,7 +9,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // NewRouter sets up the HTTP routes for vehicle operations
-func NewRouter(handler *VehicleHandler) *http.ServeMux {
+func NewRouter(handler *VehicleHandler) http.Handler {
 
 	// Create a new ServeMux
 	mux := http.NewServeMux()
@@ -42,6 +42,5 @@ func NewRouter(handler *VehicleHandler) *http.ServeMux {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
-
-	return mux
+	return LoggingMiddleware(mux)
 }

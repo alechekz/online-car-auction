@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: vehicle_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vehicle
+      POSTGRES_PASSWORD: qwerty12345
+      POSTGRES_DB: vehicles
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vehicle -d vehicles"]
+      interval: 5s
+      timeout: 2s
+      retries: 12
+
+  migrator:
+    image: migrate/migrate:latest
+    container_name: vehicle_migrator
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      'migrate -path /migrations -database "${POSTGRES_URL}" up || true'
+    volumes:
+      - ./migrations/vehicle:/migrations:ro
+    environment:
+      - POSTGRES_URL=${POSTGRES_URL}
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: ./services/vehicle/Dockerfile
+      target: runtime
+    container_name: vehicle_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    ports:
+      - "8081:8081"
+    environment:
+      - VEHICLE_DB=${POSTGRES_URL}
+      - VEHICLE_URL=:8081
+    volumes:
+      - ./:/src:ro
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
