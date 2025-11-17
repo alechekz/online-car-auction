@@ -27,6 +27,20 @@ func newTestVehicle() *domain.Vehicle {
 	}
 }
 
+// newTestUC is a helper function to create a VehicleUsecase instance for testing
+func newTestUC() usecase.VehicleUsecase {
+	repo := infrastructure.NewMemoryVehicleRepo()
+	provider := &infrastructure.MockBuildDataProvider{
+		Data: &domain.Vehicle{
+			VIN:          "1HGCM82633A004352",
+			Brand:        "Kia",
+			Engine:       "1.8L",
+			Transmission: "Automatic",
+		},
+	}
+	return usecase.NewVehicleUC(repo, provider)
+}
+
 // TestVehicleUsecase_CreateVehicle tests the CreateVehicle method of the VehicleUsecase struct
 func TestVehicleUsecase_CreateVehicle(t *testing.T) {
 
@@ -50,10 +64,7 @@ func TestVehicleUsecase_CreateVehicle(t *testing.T) {
 		},
 	}
 
-	// Prepare in-memory repository and usecase
-	repo := infrastructure.NewMemoryVehicleRepo()
-	provider := &infrastructure.InspectionGRPCClient{} // You might want to use a mock here
-	uc := usecase.NewVehicleUC(repo, provider)
+	uc := newTestUC()
 
 	// Run tests
 	for _, test := range tests {
@@ -71,9 +82,8 @@ func TestVehicleUsecase_CreateVehicle(t *testing.T) {
 // TestVehicleUsecase_GetVehicle tests the GetVehicle method of the VehicleUsecase struct
 func TestVehicleUsecase_GetVehicle(t *testing.T) {
 
-	// Prepare in-memory repository and usecase
-	repo := infrastructure.NewMemoryVehicleRepo()
-	uc := usecase.NewVehicleUC(repo)
+	// Prepare
+	uc := newTestUC()
 	v := newTestVehicle()
 	err := uc.CreateVehicle(v)
 	assert.NoError(t, err)
@@ -115,9 +125,8 @@ func TestVehicleUsecase_UpdateVehicle(t *testing.T) {
 		},
 	}
 
-	// Prepare in-memory repository and usecase
-	repo := infrastructure.NewMemoryVehicleRepo()
-	uc := usecase.NewVehicleUC(repo)
+	// Prepare
+	uc := newTestUC()
 	v := newTestVehicle()
 	err := uc.CreateVehicle(v)
 	assert.NoError(t, err)
@@ -138,9 +147,8 @@ func TestVehicleUsecase_UpdateVehicle(t *testing.T) {
 // TestVehicleUsecase_DeleteVehicle tests the DeleteVehicle method of the VehicleUsecase struct
 func TestVehicleUsecase_DeleteVehicle(t *testing.T) {
 
-	// Prepare in-memory repository and usecase
-	repo := infrastructure.NewMemoryVehicleRepo()
-	uc := usecase.NewVehicleUC(repo)
+	// Prepare
+	uc := newTestUC()
 	v := newTestVehicle()
 	err := uc.CreateVehicle(v)
 	assert.NoError(t, err)
@@ -165,9 +173,8 @@ func TestVehicleUsecase_DeleteVehicle(t *testing.T) {
 // TestVehicleUsecase_ListVehicles tests the ListVehicles method of the VehicleUsecase struct
 func TestVehicleUsecase_ListVehicles(t *testing.T) {
 
-	// Prepare in-memory repository and usecase
-	repo := infrastructure.NewMemoryVehicleRepo()
-	uc := usecase.NewVehicleUC(repo)
+	// Prepare
+	uc := newTestUC()
 
 	// Empty list case
 	t.Run("empty list", func(t *testing.T) {

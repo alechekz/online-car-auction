@@ -21,7 +21,7 @@ type vehicleUsecase struct {
 }
 
 // NewVehicleUC is the constructor for vehicleUsecase
-func NewVehicleUC(r repository.VehicleRepository, provider BuildDataProvider) VehicleUsecase {
+func NewVehicleUC(r repository.VehicleRepository, provider BuildDataProvider) *vehicleUsecase {
 	return &vehicleUsecase{repo: r, buildDataProvider: provider}
 }
 

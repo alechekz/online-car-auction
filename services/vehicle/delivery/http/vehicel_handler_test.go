@@ -26,7 +26,15 @@ func TestMain(m *testing.M) {
 // newTestRouter creates a test HTTP router with in-memory dependencies
 func newTestRouter() http.Handler {
 	repo := infrastructure.NewMemoryVehicleRepo()
-	uc := usecase.NewVehicleUC(repo)
+	provider := &infrastructure.MockBuildDataProvider{
+		Data: &domain.Vehicle{
+			VIN:          "1HGCM82633A004352",
+			Brand:        "Kia",
+			Engine:       "1.8L",
+			Transmission: "Automatic",
+		},
+	}
+	uc := usecase.NewVehicleUC(repo, provider)
 	handler := &vehiclehttp.VehicleHandler{UC: uc}
 	return vehiclehttp.NewRouter(handler)
 }
