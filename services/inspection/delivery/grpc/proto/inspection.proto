@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package inspection;
+
+option go_package = "github.com/alechekz/online-car-auction/services/inspection/delivery/grpc/proto:proto";
+
+service InspectionService {
+  rpc GetBuildData(GetBuildDataRequest) returns (BuildDataResponse);
+  rpc InspectVehicle(InspectVehicleRequest) returns (InspectVehicleResponse);
+}
+
+message GetBuildDataRequest {
+  string vin = 1;
+}
+
+message BuildDataResponse {
+  string vin = 1;
+  string brand = 2;
+  string engine = 3;
+  string transmission = 4;
+}
+
+message InspectVehicleRequest {
+  string vin = 1;
+  int32 year = 2;
+  int32 odometer = 3;
+  bool small_scratches = 4;
+  bool strong_scratches = 5;
+  bool electric_fail = 6;
+  bool suspension_fail = 7;
+}
+
+message InspectVehicleResponse {
+  string vin = 1;
+  int32 grade = 2;
+}

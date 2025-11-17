@@ -34,7 +34,11 @@ func NewServer(cfg *config) (*Server, error) {
 		logger.Log.Info("using in-memory vehicle repository")
 		repo = infrastructure.NewMemoryVehicleRepo()
 	}
-	uc := usecase.NewVehicleUC(repo)
+	provider, err := infrastructure.NewInspectionGRPCClient(cfg.InspectionURL)
+	if err != nil {
+		logger.Log.Error("failed to create inspection gRPC client", slog.String("error", err.Error()))
+	}
+	uc := usecase.NewVehicleUC(repo, provider)
 	handler := &vehiclehttp.VehicleHandler{UC: uc}
 	mux := vehiclehttp.NewRouter(handler)
 

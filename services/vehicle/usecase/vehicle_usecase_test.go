@@ -52,7 +52,8 @@ func TestVehicleUsecase_CreateVehicle(t *testing.T) {
 
 	// Prepare in-memory repository and usecase
 	repo := infrastructure.NewMemoryVehicleRepo()
-	uc := usecase.NewVehicleUC(repo)
+	provider := &infrastructure.InspectionGRPCClient{} // You might want to use a mock here
+	uc := usecase.NewVehicleUC(repo, provider)
 
 	// Run tests
 	for _, test := range tests {

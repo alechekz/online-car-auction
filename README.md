@@ -183,9 +183,9 @@
 
 
 # vehicle service API examples
-curl -i -X POST http://localhost:8081/vehicles \
+curl -i -X POST http://localhost:7071/vehicles \
   -H "Content-Type: application/json" \
-  -d '{"vin":"1HGBH41JXMN109186","year":2022,"msrp":25999.99,"odometer":12000}'
+  -d '{"vin":"1HGCM82633A004352","year":2022,"msrp":25999.99,"odometer":12000}'
 
 curl -i http://localhost:8081/vehicles
 
@@ -414,3 +414,8 @@ func InspectHandler(w http.ResponseWriter, r *http.Request) {
 - сгенерировать готовые Go‑handlers + DTO + SQL миграции,
 - подготовить OpenAPI спецификацию для быстрых интеграций,
 - или написать unit тесты для алгоритма grade. Что делаем дальше?
+
+protoc -I=services/inspection/delivery/grpc/proto \
+  --go_out=paths=source_relative:services/inspection/delivery/grpc/proto \
+  --go-grpc_out=paths=source_relative:services/inspection/delivery/grpc/proto \
+  services/inspection/delivery/grpc/proto/inspection.proto

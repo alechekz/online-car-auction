@@ -10,7 +10,7 @@ vehicle-build:
 	@echo "Vehicle service successfully built"
 
 vehicle-run:
-	@VEHICLE_URL=:7071 ./vehicle-service
+	@VEHICLE_URL=:7071 INSPECTION_URL=:7073 ./vehicle-service
 
 vehicle-test:
 	@go test -v ./services/vehicle/...
@@ -36,7 +36,7 @@ inspection-build:
 	@echo "inspection service successfully built"
 
 inspection-run:
-	@INSPECTION_URL=:7072 ./inspection-service
+	@INSPECTION_HTTP=:7072 INSPECTION_GRPC=:7073 ./inspection-service
 
 inspection-test:
 	@go test -v ./services/inspection/...

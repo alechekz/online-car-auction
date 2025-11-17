@@ -16,19 +16,41 @@ type VehicleUsecase interface {
 
 // vehicleUsecase is the implementation of VehicleUsecase interface
 type vehicleUsecase struct {
-	repo repository.VehicleRepository
+	repo              repository.VehicleRepository
+	buildDataProvider BuildDataProvider
 }
 
 // NewVehicleUC is the constructor for vehicleUsecase
-func NewVehicleUC(r repository.VehicleRepository) VehicleUsecase {
-	return &vehicleUsecase{repo: r}
+func NewVehicleUC(r repository.VehicleRepository, provider BuildDataProvider) VehicleUsecase {
+	return &vehicleUsecase{repo: r, buildDataProvider: provider}
 }
 
 // CreateVehicle creates a new vehicle record
 func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
+
+	// Validate the vehicle data
 	if err := v.Validate(); err != nil {
 		return domain.ErrValidation
 	}
+
+	// Fetch build data for the vehicle
+	bd, err := uc.buildDataProvider.Fetch(v.VIN)
+	if err != nil {
+		return err
+	}
+
+	// Merge users vehicle data with fetched build data
+	if v.Brand == "" {
+		v.Brand = bd.Brand
+	}
+	if v.Engine == "" {
+		v.Engine = bd.Engine
+	}
+	if v.Transmission == "" {
+		v.Transmission = bd.Transmission
+	}
+
+	// Save the vehicle record
 	return uc.repo.Save(v)
 }
 
