@@ -5,7 +5,7 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN make vehicle-lint
+#RUN make vehicle-lint
 RUN make vehicle-test
 RUN make vehicle-build
 

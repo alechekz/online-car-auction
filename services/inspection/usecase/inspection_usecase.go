@@ -12,12 +12,13 @@ type InspectionUsecase interface {
 
 // inspectionUsecase is the implementation of InspectionUsecase interface
 type inspectionUsecase struct {
-	provider BuildDataProvider
+	provider     BuildDataProvider
+	msrpProvider MSRPProvider
 }
 
 // NewInspectionUC is the constructor for inspectionUsecase
-func NewInspectionUC(p BuildDataProvider) InspectionUsecase {
-	return &inspectionUsecase{provider: p}
+func NewInspectionUC(p BuildDataProvider, msrp MSRPProvider) InspectionUsecase {
+	return &inspectionUsecase{provider: p, msrpProvider: msrp}
 }
 
 // InspectVehicle inspects a vehicle and creates a new inspection record
@@ -40,6 +41,12 @@ func (uc *inspectionUsecase) GetBuildData(vin string) (*domain.Vehicle, error) {
 	if err := v.ValidateVIN(); err != nil {
 		return nil, domain.ErrValidation
 	}
+
+	// Fetch MSRP data
+	if err := uc.msrpProvider.Fetch(v); err != nil {
+		return nil, err
+	}
+
 	// Fetch build data from the provider
 	return v, uc.provider.Fetch(v)
 }

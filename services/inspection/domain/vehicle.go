@@ -14,6 +14,7 @@ type Vehicle struct {
 	Brand        string `json:"brand"`
 	Engine       string `json:"engine"`
 	Transmission string `json:"transmission"`
+	MSRP         uint64 `json:"msrp"`
 
 	//inspection data
 	Year            int  `json:"year"`

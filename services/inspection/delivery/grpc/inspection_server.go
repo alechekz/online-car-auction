@@ -29,6 +29,7 @@ func (s *InspectionServer) GetBuildData(ctx context.Context, req *pb.GetBuildDat
 		Brand:        data.Brand,
 		Engine:       data.Engine,
 		Transmission: data.Transmission,
+		Msrp:         uint64(data.MSRP),
 	}, nil
 }
 

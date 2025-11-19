@@ -30,7 +30,7 @@ func newTestVehicle() *domain.Vehicle {
 // newTestUC is a helper function to create a VehicleUsecase instance for testing
 func newTestUC() usecase.VehicleUsecase {
 	repo := infrastructure.NewMemoryVehicleRepo()
-	provider := &infrastructure.MockBuildDataProvider{
+	provider := &infrastructure.MockInspectionProvider{
 		Data: &domain.Vehicle{
 			VIN:          "1HGCM82633A004352",
 			Brand:        "Kia",

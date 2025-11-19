@@ -183,31 +183,31 @@
 
 
 # vehicle service API examples
-curl -i -X POST http://localhost:7071/vehicles \
+curl -i -X POST http://localhost:8081/vehicles \
   -H "Content-Type: application/json" \
-  -d '{"vin":"1HGCM82633A004352","year":2022,"msrp":25999.99,"odometer":12000}'
+  -d '{"vin":"5YJSA1E26MF168123","year":2022,"odometer":12000}'
 
 curl -i http://localhost:8081/vehicles
 
 curl -i http://localhost:8081/vehicles/1HGBH41JXMN109186
 
-curl -i -X PUT http://localhost:8081/vehicles/1HGBH41JXMN109186 \
+curl -i -X PUT http://localhost:8081/vehicles/1HGCM82633A004352 \
   -H "Content-Type: application/json" \
   -d '{
-    "vin":"1HGBH41JXMN109186",
-    "year":2022,
+    "vin":"1HGCM82633A004352",
+    "year":1999,
     "msrp":25999.99,
     "odometer":12500
   }'
 
-curl -i -X DELETE http://localhost:8081/vehicles/1HGBH41JXMN109186
+curl -i -X DELETE http://localhost:8081/vehicles/5YJSA1E26MF168123
 
 # Inspection Service API examples
-curl -i http://localhost:7072/inspections/get-build-data/1HGCM82633A004352
+curl -i http://localhost:7072/inspections/get-build-data/5YJSA1E26MF168123
 
-curl -i -X POST http://localhost:7072/inspections/inspect \
+curl -i -X POST http://localhost:8082/inspections/inspect \
   -H "Content-Type: application/json" \
-  -d '{"vin":"1HGBH41JXMN109186","year":2022}'
+  -d '{"vin":"5YJSA1E26MF168123","year":2022}'
 
 
 ### Описание задачи - Inspection Service

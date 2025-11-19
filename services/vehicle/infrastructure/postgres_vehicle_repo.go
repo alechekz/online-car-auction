@@ -45,8 +45,8 @@ func (r *PostgresVehicleRepo) FindByVIN(vin string) (*domain.Vehicle, error) {
 // Update updates an existing vehicle in the PostgreSQL database
 func (r *PostgresVehicleRepo) Update(v *domain.Vehicle) error {
 	_, err := r.db.Exec(context.Background(),
-		`UPDATE vehicles SET year=$1, msrp=$2, odometer=$3 WHERE vin=$4`,
-		v.Year, v.MSRP, v.Odometer, v.VIN,
+		`UPDATE vehicles SET year=$1, odometer=$2 WHERE vin=$3`,
+		v.Year, v.Odometer, v.VIN,
 	)
 	return err
 }

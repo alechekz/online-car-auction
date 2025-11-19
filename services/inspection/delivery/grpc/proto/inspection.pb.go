@@ -71,6 +71,7 @@ type BuildDataResponse struct {
 	Brand         string                 `protobuf:"bytes,2,opt,name=brand,proto3" json:"brand,omitempty"`
 	Engine        string                 `protobuf:"bytes,3,opt,name=engine,proto3" json:"engine,omitempty"`
 	Transmission  string                 `protobuf:"bytes,4,opt,name=transmission,proto3" json:"transmission,omitempty"`
+	Msrp          uint64                 `protobuf:"varint,5,opt,name=msrp,proto3" json:"msrp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -131,6 +132,13 @@ func (x *BuildDataResponse) GetTransmission() string {
 		return x.Transmission
 	}
 	return ""
+}
+
+func (x *BuildDataResponse) GetMsrp() uint64 {
+	if x != nil {
+		return x.Msrp
+	}
+	return 0
 }
 
 type InspectVehicleRequest struct {
@@ -284,12 +292,13 @@ const file_inspection_proto_rawDesc = "" +
 	"\x10inspection.proto\x12\n" +
 	"inspection\"'\n" +
 	"\x13GetBuildDataRequest\x12\x10\n" +
-	"\x03vin\x18\x01 \x01(\tR\x03vin\"w\n" +
+	"\x03vin\x18\x01 \x01(\tR\x03vin\"\x8b\x01\n" +
 	"\x11BuildDataResponse\x12\x10\n" +
 	"\x03vin\x18\x01 \x01(\tR\x03vin\x12\x14\n" +
 	"\x05brand\x18\x02 \x01(\tR\x05brand\x12\x16\n" +
 	"\x06engine\x18\x03 \x01(\tR\x06engine\x12\"\n" +
-	"\ftransmission\x18\x04 \x01(\tR\ftransmission\"\xfb\x01\n" +
+	"\ftransmission\x18\x04 \x01(\tR\ftransmission\x12\x12\n" +
+	"\x04msrp\x18\x05 \x01(\x04R\x04msrp\"\xfb\x01\n" +
 	"\x15InspectVehicleRequest\x12\x10\n" +
 	"\x03vin\x18\x01 \x01(\tR\x03vin\x12\x12\n" +
 	"\x04year\x18\x02 \x01(\x05R\x04year\x12\x1a\n" +

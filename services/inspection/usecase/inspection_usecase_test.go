@@ -51,7 +51,8 @@ func TestInspectionUsecase_InspectVehicle(t *testing.T) {
 
 	// Prepare in-memory repository and usecase
 	provider := infrastructure.NewNHTSABuildDataClient()
-	uc := usecase.NewInspectionUC(provider)
+	msrp := infrastructure.NewMockMSRPClient()
+	uc := usecase.NewInspectionUC(provider, msrp)
 
 	// Run tests
 	for _, test := range tests {

@@ -26,7 +26,8 @@ func TestMain(m *testing.M) {
 // newTestRouter creates a test HTTP router with in-memory dependencies
 func newTestRouter() http.Handler {
 	provider := infrastructure.NewNHTSABuildDataClient()
-	uc := usecase.NewInspectionUC(provider)
+	msrp := infrastructure.NewMockMSRPClient()
+	uc := usecase.NewInspectionUC(provider, msrp)
 	handler := &inspectionhttp.InspectionHandler{UC: uc}
 	return inspectionhttp.NewRouter(handler)
 }

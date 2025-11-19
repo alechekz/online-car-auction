@@ -18,6 +18,7 @@ message BuildDataResponse {
   string brand = 2;
   string engine = 3;
   string transmission = 4;
+  uint64 msrp = 5;
 }
 
 message InspectVehicleRequest {

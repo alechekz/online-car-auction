@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	grpcDelivery "github.com/alechekz/online-car-auction/services/inspection/delivery/grpc"
 	pb "github.com/alechekz/online-car-auction/services/inspection/delivery/grpc/proto"
@@ -28,7 +29,8 @@ type Server struct {
 func NewServer(cfg *config) (*Server, error) {
 	// dependencies
 	provider := infrastructure.NewNHTSABuildDataClient()
-	uc := usecase.NewInspectionUC(provider)
+	msrp := infrastructure.NewMockMSRPClient()
+	uc := usecase.NewInspectionUC(provider, msrp)
 
 	// HTTP handler
 	handler := &httpDelivery.InspectionHandler{UC: uc}
@@ -37,6 +39,7 @@ func NewServer(cfg *config) (*Server, error) {
 	// gRPC handler
 	grpcSrv := grpc.NewServer()
 	pb.RegisterInspectionServiceServer(grpcSrv, grpcDelivery.NewInspectionServer(uc))
+	reflection.Register(grpcSrv)
 	lis, err := net.Listen("tcp", cfg.GrpcAddress)
 	if err != nil {
 		return nil, err

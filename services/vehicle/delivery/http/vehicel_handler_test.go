@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 // newTestRouter creates a test HTTP router with in-memory dependencies
 func newTestRouter() http.Handler {
 	repo := infrastructure.NewMemoryVehicleRepo()
-	provider := &infrastructure.MockBuildDataProvider{
+	provider := &infrastructure.MockInspectionProvider{
 		Data: &domain.Vehicle{
 			VIN:          "1HGCM82633A004352",
 			Brand:        "Kia",
@@ -155,8 +155,8 @@ func TestVehicleHandler_UpdateVehicle(t *testing.T) {
 		var got domain.Vehicle
 		err := json.Unmarshal(rec.Body.Bytes(), &got)
 		assert.NoError(t, err)
-		assert.Equal(t, 2021, got.Year)
-		assert.Equal(t, 20000, got.Odometer)
+		assert.Equal(t, int32(2021), got.Year)
+		assert.Equal(t, int32(20000), got.Odometer)
 	})
 
 	// Invalid case

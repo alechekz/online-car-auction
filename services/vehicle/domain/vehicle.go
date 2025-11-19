@@ -8,20 +8,20 @@ import (
 
 // Vehicle represents a vehicle entity in the system
 type Vehicle struct {
-	VIN             string  `json:"vin"`
-	Year            int     `json:"year"`
-	Odometer        int     `json:"odometer"`
-	ExteriorColor   string  `json:"exteriorColor"`
-	InteriorColor   string  `json:"interiorColor"`
-	MSRP            float64 `json:"msrp"`
-	Grade           int     `json:"grade"`
-	SmallScratches  bool    `json:"small_scratches"`
-	StrongScratches bool    `json:"strong_scratches"`
-	ElectricFail    bool    `json:"electric_fail"`
-	SuspensionFail  bool    `json:"suspension_fail"`
-	Brand           string  `json:"brand"`
-	Engine          string  `json:"engine"`
-	Transmission    string  `json:"transmission"`
+	VIN             string `json:"vin"`
+	Year            int32  `json:"year"`
+	Odometer        int32  `json:"odometer"`
+	ExteriorColor   string `json:"exteriorColor"`
+	InteriorColor   string `json:"interiorColor"`
+	MSRP            uint64 `json:"msrp"`
+	Grade           int    `json:"grade"`
+	SmallScratches  bool   `json:"small_scratches"`
+	StrongScratches bool   `json:"strong_scratches"`
+	ElectricFail    bool   `json:"electric_fail"`
+	SuspensionFail  bool   `json:"suspension_fail"`
+	Brand           string `json:"brand"`
+	Engine          string `json:"engine"`
+	Transmission    string `json:"transmission"`
 }
 
 // Validate checks if the vehicle data is valid
@@ -38,11 +38,6 @@ func (v *Vehicle) Validate() error {
 			validation.Required,
 			validation.Min(1900),
 			validation.Max(time.Now().Year()),
-		),
-		validation.Field(
-			&v.MSRP,
-			validation.Required,
-			validation.Min(0.0),
 		),
 		validation.Field(
 			&v.Odometer,

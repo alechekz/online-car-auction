@@ -20,7 +20,6 @@ func newTestVehicle() *domain.Vehicle {
 	return &domain.Vehicle{
 		VIN:      "1HGBH41JXMN109186",
 		Year:     2022,
-		MSRP:     25999.99,
 		Odometer: 12000,
 	}
 }
@@ -58,24 +57,6 @@ func TestVehicle_Validate(t *testing.T) {
 			data: func() *domain.Vehicle {
 				v := newTestVehicle()
 				v.Year = 2026
-				return v
-			},
-			isValid: false,
-		},
-		{
-			name: "zero MSRP",
-			data: func() *domain.Vehicle {
-				v := newTestVehicle()
-				v.MSRP = 0.0
-				return v
-			},
-			isValid: false,
-		},
-		{
-			name: "negative MSRP",
-			data: func() *domain.Vehicle {
-				v := newTestVehicle()
-				v.MSRP = -1000.00
 				return v
 			},
 			isValid: false,
