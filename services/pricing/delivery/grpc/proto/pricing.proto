@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pricing;
+
+option go_package = "github.com/alechekz/online-car-auction/services/pricing/delivery/grpc/proto:proto";
+
+service PricingService {
+  rpc GetRecommendedPrice(PriceRequest) returns (PriceResponse);
+}
+
+message PriceRequest {
+  string vin = 1;
+}
+
+message PriceResponse {
+  uint64 price = 1;
+}

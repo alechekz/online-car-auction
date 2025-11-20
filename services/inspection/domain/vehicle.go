@@ -79,7 +79,7 @@ func (v *Vehicle) Inspect() {
 	if v.SuspensionFail {
 		tempGrade /= 1.06
 	}
-	if v.Odometer > 300000 && tempGrade > 30.0 {
+	if v.Odometer > 300_000 && tempGrade > 30.0 {
 		tempGrade = 30.0
 	}
 

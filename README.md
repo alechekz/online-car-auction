@@ -183,7 +183,7 @@
 
 
 # vehicle service API examples
-curl -i -X POST http://localhost:8081/vehicles \
+curl -i -X POST http://localhost:7071/vehicles \
   -H "Content-Type: application/json" \
   -d '{"vin":"5YJSA1E26MF168123","year":2022,"odometer":12000}'
 
@@ -209,6 +209,11 @@ curl -i -X POST http://localhost:8082/inspections/inspect \
   -H "Content-Type: application/json" \
   -d '{"vin":"5YJSA1E26MF168123","year":2022}'
 
+curl -i -X POST http://localhost:7074/pricing/get-recommended-price \
+  -H "Content-Type: application/json" \
+  -d '{"vin":"5YJSA1E26MF168123","grade":47,"odometer":30000}'
+
+curl -i -X GET http://localhost:7074/health
 
 ### Описание задачи - Inspection Service
 
@@ -419,3 +424,8 @@ protoc -I=services/inspection/delivery/grpc/proto \
   --go_out=paths=source_relative:services/inspection/delivery/grpc/proto \
   --go-grpc_out=paths=source_relative:services/inspection/delivery/grpc/proto \
   services/inspection/delivery/grpc/proto/inspection.proto
+
+protoc -I=services/pricing/delivery/grpc/proto \
+  --go_out=paths=source_relative:services/pricing/delivery/grpc/proto \
+  --go-grpc_out=paths=source_relative:services/pricing/delivery/grpc/proto \
+  services/pricing/delivery/grpc/proto/pricing.proto
