@@ -8,6 +8,7 @@ import (
 type config struct {
 	Address       string
 	InspectionURL string
+	PricingURL    string
 	DatabaseURL   string
 	Repo          string // "postgres" or "inmemory"
 }
@@ -17,6 +18,7 @@ func NewConfig() *config {
 	cfg := &config{
 		Address:       ":6061",
 		InspectionURL: ":6063",
+		PricingURL:    ":6065",
 
 		Repo: "inmemory",
 	}
@@ -25,6 +27,9 @@ func NewConfig() *config {
 	}
 	if os.Getenv("INSPECTION_URL") != "" {
 		cfg.InspectionURL = os.Getenv("INSPECTION_URL")
+	}
+	if os.Getenv("PRICING_URL") != "" {
+		cfg.PricingURL = os.Getenv("PRICING_URL")
 	}
 	if os.Getenv("VEHICLE_DB") != "" {
 		cfg.DatabaseURL = os.Getenv("VEHICLE_DB")

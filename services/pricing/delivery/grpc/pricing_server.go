@@ -20,7 +20,13 @@ func NewPricingServer(uc usecase.PricingUsecase) *PricingServer {
 
 // GetRecommendedPrice retrieves the recommended price for a vehicle by its VIN
 func (s *PricingServer) GetRecommendedPrice(ctx context.Context, req *pb.PriceRequest) (*pb.PriceResponse, error) {
-	v := &domain.Vehicle{VIN: req.Vin}
+	v := &domain.Vehicle{
+		VIN:           req.Vin,
+		Odometer:      int(req.Odometer),
+		Grade:         int(req.Grade),
+		ExteriorColor: req.ExteriorColor,
+		InteriorColor: req.InteriorColor,
+	}
 	err := s.uc.GetRecommendedPrice(v)
 	if err != nil {
 		return nil, err

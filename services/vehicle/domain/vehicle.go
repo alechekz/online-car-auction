@@ -14,6 +14,7 @@ type Vehicle struct {
 	ExteriorColor   string `json:"exteriorColor"`
 	InteriorColor   string `json:"interiorColor"`
 	MSRP            uint64 `json:"msrp"`
+	Price           uint64 `json:"price"`
 	Grade           int    `json:"grade"`
 	SmallScratches  bool   `json:"small_scratches"`
 	StrongScratches bool   `json:"strong_scratches"`

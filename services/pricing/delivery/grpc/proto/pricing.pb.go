@@ -24,6 +24,10 @@ const (
 type PriceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Vin           string                 `protobuf:"bytes,1,opt,name=vin,proto3" json:"vin,omitempty"`
+	Odometer      int32                  `protobuf:"varint,2,opt,name=odometer,proto3" json:"odometer,omitempty"`
+	Grade         int32                  `protobuf:"varint,3,opt,name=grade,proto3" json:"grade,omitempty"`
+	ExteriorColor string                 `protobuf:"bytes,4,opt,name=exterior_color,json=exteriorColor,proto3" json:"exterior_color,omitempty"`
+	InteriorColor string                 `protobuf:"bytes,5,opt,name=interior_color,json=interiorColor,proto3" json:"interior_color,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,6 +65,34 @@ func (*PriceRequest) Descriptor() ([]byte, []int) {
 func (x *PriceRequest) GetVin() string {
 	if x != nil {
 		return x.Vin
+	}
+	return ""
+}
+
+func (x *PriceRequest) GetOdometer() int32 {
+	if x != nil {
+		return x.Odometer
+	}
+	return 0
+}
+
+func (x *PriceRequest) GetGrade() int32 {
+	if x != nil {
+		return x.Grade
+	}
+	return 0
+}
+
+func (x *PriceRequest) GetExteriorColor() string {
+	if x != nil {
+		return x.ExteriorColor
+	}
+	return ""
+}
+
+func (x *PriceRequest) GetInteriorColor() string {
+	if x != nil {
+		return x.InteriorColor
 	}
 	return ""
 }
@@ -113,9 +145,13 @@ var File_pricing_proto protoreflect.FileDescriptor
 
 const file_pricing_proto_rawDesc = "" +
 	"\n" +
-	"\rpricing.proto\x12\apricing\" \n" +
+	"\rpricing.proto\x12\apricing\"\xa0\x01\n" +
 	"\fPriceRequest\x12\x10\n" +
-	"\x03vin\x18\x01 \x01(\tR\x03vin\"%\n" +
+	"\x03vin\x18\x01 \x01(\tR\x03vin\x12\x1a\n" +
+	"\bodometer\x18\x02 \x01(\x05R\bodometer\x12\x14\n" +
+	"\x05grade\x18\x03 \x01(\x05R\x05grade\x12%\n" +
+	"\x0eexterior_color\x18\x04 \x01(\tR\rexteriorColor\x12%\n" +
+	"\x0einterior_color\x18\x05 \x01(\tR\rinteriorColor\"%\n" +
 	"\rPriceResponse\x12\x14\n" +
 	"\x05price\x18\x01 \x01(\x04R\x05price2V\n" +
 	"\x0ePricingService\x12D\n" +

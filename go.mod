@@ -1,6 +1,6 @@
 module github.com/alechekz/online-car-auction
 
-go 1.25
+go 1.24.0
 
 require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0

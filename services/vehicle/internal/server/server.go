@@ -34,11 +34,16 @@ func NewServer(cfg *config) (*Server, error) {
 		logger.Log.Info("using in-memory vehicle repository")
 		repo = infrastructure.NewMemoryVehicleRepo()
 	}
-	provider, err := infrastructure.NewInspectionGRPCClient(cfg.InspectionURL)
+	inspectionProvider, err := infrastructure.NewInspectionGRPCClient(cfg.InspectionURL)
 	if err != nil {
 		logger.Log.Error("failed to create inspection gRPC client", slog.String("error", err.Error()))
 	}
-	uc := usecase.NewVehicleUC(repo, provider)
+	pricingProvider, err := infrastructure.NewPricingGRPCClient(cfg.PricingURL)
+	if err != nil {
+		logger.Log.Error("failed to create pricing gRPC client", slog.String("error", err.Error()))
+	}
+	logger.Log.Info("connected to dependencies", slog.String("inspection_url", cfg.InspectionURL), slog.String("pricing_url", cfg.PricingURL))
+	uc := usecase.NewVehicleUC(repo, inspectionProvider, pricingProvider)
 	handler := &vehiclehttp.VehicleHandler{UC: uc}
 	mux := vehiclehttp.NewRouter(handler)
 

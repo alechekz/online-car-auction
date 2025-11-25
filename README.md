@@ -183,37 +183,37 @@
 
 
 # vehicle service API examples
-curl -i -X POST http://localhost:7071/vehicles \
+curl -i -X POST http://localhost:8081/vehicles \
   -H "Content-Type: application/json" \
   -d '{"vin":"5YJSA1E26MF168123","year":2022,"odometer":12000}'
 
 curl -i http://localhost:8081/vehicles
 
-curl -i http://localhost:8081/vehicles/1HGBH41JXMN109186
+curl -i http://localhost:8081/vehicles/5YJSA1E26MF168123
 
-curl -i -X PUT http://localhost:8081/vehicles/1HGCM82633A004352 \
+curl -i -X PUT http://localhost:8081/vehicles/5YJSA1E26MF168123 \
   -H "Content-Type: application/json" \
   -d '{
-    "vin":"1HGCM82633A004352",
+    "vin":"5YJSA1E26MF168123",
     "year":1999,
-    "msrp":25999.99,
-    "odometer":12500
+    "odometer":125000,
+    "exteriorColor":"Red",
+    "interiorColor":"Black"
   }'
 
 curl -i -X DELETE http://localhost:8081/vehicles/5YJSA1E26MF168123
 
 # Inspection Service API examples
-curl -i http://localhost:7072/inspections/get-build-data/5YJSA1E26MF168123
+curl -i http://localhost:8082/inspections/get-build-data/5YJSA1E26MF168123
 
 curl -i -X POST http://localhost:8082/inspections/inspect \
   -H "Content-Type: application/json" \
   -d '{"vin":"5YJSA1E26MF168123","year":2022}'
 
-curl -i -X POST http://localhost:7074/pricing/get-recommended-price \
+curl -i -X POST http://localhost:8084/pricing/get-recommended-price \
   -H "Content-Type: application/json" \
   -d '{"vin":"5YJSA1E26MF168123","grade":47,"odometer":30000}'
 
-curl -i -X GET http://localhost:7074/health
 
 ### Описание задачи - Inspection Service
 

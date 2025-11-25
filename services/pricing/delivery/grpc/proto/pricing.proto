@@ -10,6 +10,10 @@ service PricingService {
 
 message PriceRequest {
   string vin = 1;
+  int32 odometer = 2;
+  int32 grade = 3;
+  string exterior_color = 4;
+  string interior_color = 5;
 }
 
 message PriceResponse {

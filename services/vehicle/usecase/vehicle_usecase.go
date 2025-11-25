@@ -18,20 +18,20 @@ type VehicleUsecase interface {
 type vehicleUsecase struct {
 	repo               repository.VehicleRepository
 	inspectionProvider InspectionProvider
+	pricingProvider    PricingProvider
 }
 
 // NewVehicleUC is the constructor for vehicleUsecase
-func NewVehicleUC(r repository.VehicleRepository, provider InspectionProvider) *vehicleUsecase {
-	return &vehicleUsecase{repo: r, inspectionProvider: provider}
+func NewVehicleUC(r repository.VehicleRepository, inspectionProvider InspectionProvider, pricingProvider PricingProvider) *vehicleUsecase {
+	return &vehicleUsecase{
+		repo:               r,
+		inspectionProvider: inspectionProvider,
+		pricingProvider:    pricingProvider,
+	}
 }
 
-// CreateVehicle creates a new vehicle record
-func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
-
-	// Validate the vehicle data
-	if err := v.Validate(); err != nil {
-		return domain.ErrValidation
-	}
+// fetch fetches all necessary data for vehicle processing
+func (uc *vehicleUsecase) fetch(v *domain.Vehicle) error {
 
 	// Fetch build data and merge with user's vehicle data
 	bd, err := uc.inspectionProvider.GetBuildData(v.VIN)
@@ -54,6 +54,28 @@ func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
 		return err
 	}
 
+	// Calculate the price based on MSRP and grade
+	price, err := uc.pricingProvider.GetRecommendedPrice(v)
+	if err != nil {
+		return err
+	}
+	v.Price = price
+	return nil
+}
+
+// CreateVehicle creates a new vehicle record
+func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
+
+	// Validate the vehicle data
+	if err := v.Validate(); err != nil {
+		return domain.ErrValidation
+	}
+
+	// Fetch all necessary data for vehicle processing
+	if err := uc.fetch(v); err != nil {
+		return err
+	}
+
 	// Save the vehicle record
 	return uc.repo.Save(v)
 }
@@ -72,9 +94,18 @@ func (uc *vehicleUsecase) GetVehicle(vin string) (*domain.Vehicle, error) {
 
 // UpdateVehicle updates an existing vehicle record
 func (uc *vehicleUsecase) UpdateVehicle(v *domain.Vehicle) error {
+
+	// Validate the vehicle data
 	if err := v.Validate(); err != nil {
 		return domain.ErrValidation
 	}
+
+	// Fetch all necessary data for vehicle processing
+	if err := uc.fetch(v); err != nil {
+		return err
+	}
+
+	// Update the vehicle record
 	if err := uc.repo.Update(v); err != nil {
 		return domain.ErrNotFound
 	}

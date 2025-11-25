@@ -54,6 +54,28 @@ services:
       timeout: 2s
       retries: 12
 
+  pricing:
+    build:
+      context: .
+      dockerfile: ./services/pricing/Dockerfile
+      target: runtime
+    container_name: pricing_app
+    ports:
+      - "8084:8084"   # REST
+      - "8085:8085"   # gRPC
+    environment:
+      - PRICING_HTTP=:8084
+      - PRICING_GRPC=:8085
+      - INSPECTION_URL=inspection:8083
+    volumes:
+      - ./:/src:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8084/health && grpcurl -plaintext localhost:8085 list pricing.PricingService || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 12
+
   vehicle:
     build:
       context: .
@@ -73,6 +95,7 @@ services:
       - VEHICLE_DB=${POSTGRES_URL}
       - VEHICLE_URL=:8081
       - INSPECTION_URL=inspection:8083
+      - PRICING_URL=pricing:8085
     volumes:
       - ./:/src:ro
     restart: unless-stopped

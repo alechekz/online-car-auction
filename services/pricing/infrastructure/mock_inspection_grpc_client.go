@@ -13,5 +13,5 @@ func (m *MockInspectionProvider) GetMsrp(vin string) (uint64, error) {
 	if m.Err != nil {
 		return 0, m.Err
 	}
-	return 99_000, nil
+	return m.Data.Msrp, nil
 }
