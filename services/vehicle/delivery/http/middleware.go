@@ -37,10 +37,10 @@ func WriteError(w http.ResponseWriter, err error) {
 	switch {
 	case errors.Is(err, domain.ErrValidation):
 		status = http.StatusBadRequest
-		// msg = err.Error()
+		msg = err.Error()
 	case errors.Is(err, domain.ErrNotFound):
 		status = http.StatusNotFound
-		// msg = err.Error()
+		msg = err.Error()
 	}
 
 	// Write response
