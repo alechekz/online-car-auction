@@ -50,7 +50,7 @@ func NewServer(cfg *config) (*Server, error) {
 		httpServer: &http.Server{
 			Addr:              cfg.HttpAddress,
 			Handler:           mux,
-			ReadHeaderTimeout: 5 * time.Second,
+			ReadHeaderTimeout: 15 * time.Second,
 		},
 		grpcServer: grpcSrv,
 		grpcLis:    lis,

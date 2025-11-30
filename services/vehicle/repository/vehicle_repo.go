@@ -9,4 +9,7 @@ type VehicleRepository interface {
 	Update(v *domain.Vehicle) error
 	Delete(vin string) error
 	List() ([]*domain.Vehicle, error)
+
+	SaveBulk(vb *domain.VehiclesBulk) error
+	UpdateBulk(vb *domain.VehiclesBulk) error
 }

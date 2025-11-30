@@ -70,7 +70,7 @@ func TestVehicleUsecase_CreateVehicle(t *testing.T) {
 	// Run tests
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			err := uc.CreateVehicle(test.data())
+			err := uc.Create(test.data())
 			if test.isValid {
 				assert.NoError(t, err)
 			} else {
@@ -86,19 +86,19 @@ func TestVehicleUsecase_GetVehicle(t *testing.T) {
 	// Prepare
 	uc := newTestUC()
 	v := newTestVehicle()
-	err := uc.CreateVehicle(v)
+	err := uc.Create(v)
 	assert.NoError(t, err)
 
 	// Valid case
 	t.Run("existing vehicle", func(t *testing.T) {
-		got, err := uc.GetVehicle(v.VIN)
+		got, err := uc.Get(v.VIN)
 		assert.NoError(t, err)
 		assert.Equal(t, v.VIN, got.VIN)
 	})
 
 	// Invalid case
 	t.Run("non-existing vehicle", func(t *testing.T) {
-		_, err := uc.GetVehicle("NONEXISTENTVIN12345")
+		_, err := uc.Get("NONEXISTENTVIN12345")
 		assert.Error(t, err)
 	})
 }
@@ -129,13 +129,13 @@ func TestVehicleUsecase_UpdateVehicle(t *testing.T) {
 	// Prepare
 	uc := newTestUC()
 	v := newTestVehicle()
-	err := uc.CreateVehicle(v)
+	err := uc.Create(v)
 	assert.NoError(t, err)
 
 	// Run tests
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			err := uc.UpdateVehicle(test.data())
+			err := uc.Update(test.data())
 			if test.isValid {
 				assert.NoError(t, err)
 			} else {
@@ -151,22 +151,22 @@ func TestVehicleUsecase_DeleteVehicle(t *testing.T) {
 	// Prepare
 	uc := newTestUC()
 	v := newTestVehicle()
-	err := uc.CreateVehicle(v)
+	err := uc.Create(v)
 	assert.NoError(t, err)
 
 	// Valid case
 	t.Run("delete existing vehicle", func(t *testing.T) {
-		err := uc.DeleteVehicle(v.VIN)
+		err := uc.Delete(v.VIN)
 		assert.NoError(t, err)
 
 		// Verify deletion
-		_, err = uc.GetVehicle(v.VIN)
+		_, err = uc.Get(v.VIN)
 		assert.Error(t, err)
 	})
 
 	// Invalid case
 	t.Run("delete non-existing vehicle", func(t *testing.T) {
-		err := uc.DeleteVehicle("NONEXISTENTVIN12345")
+		err := uc.Delete("NONEXISTENTVIN12345")
 		assert.Error(t, err)
 	})
 }
@@ -179,7 +179,7 @@ func TestVehicleUsecase_ListVehicles(t *testing.T) {
 
 	// Empty list case
 	t.Run("empty list", func(t *testing.T) {
-		vehicles, err := uc.ListVehicles()
+		vehicles, err := uc.List()
 		assert.NoError(t, err)
 		assert.Len(t, vehicles, 0)
 	})
@@ -193,11 +193,11 @@ func TestVehicleUsecase_ListVehicles(t *testing.T) {
 			Odometer: 5000,
 			MSRP:     30000,
 		}
-		assert.NoError(t, uc.CreateVehicle(v1))
-		assert.NoError(t, uc.CreateVehicle(v2))
+		assert.NoError(t, uc.Create(v1))
+		assert.NoError(t, uc.Create(v2))
 
 		// Retrieve and verify list
-		vehicles, err := uc.ListVehicles()
+		vehicles, err := uc.List()
 		assert.NoError(t, err)
 		assert.Len(t, vehicles, 2)
 

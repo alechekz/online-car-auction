@@ -23,8 +23,8 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// newTestRouter creates a test HTTP router with in-memory dependencies
-func newTestRouter() http.Handler {
+// NewTestRouter creates a test HTTP router with in-memory dependencies
+func NewTestRouter() http.Handler {
 	repo := infrastructure.NewMemoryVehicleRepo()
 	inspectionProvider := &infrastructure.MockInspectionProvider{
 		Data: &domain.Vehicle{
@@ -37,12 +37,14 @@ func newTestRouter() http.Handler {
 	pricingProvider := &infrastructure.MockPricingProvider{}
 	uc := usecase.NewVehicleUC(repo, inspectionProvider, pricingProvider)
 	handler := &vehiclehttp.VehicleHandler{UC: uc}
-	return vehiclehttp.NewRouter(handler)
+	bulkUc := usecase.NewVehiclesBulkUC(repo, uc)
+	bulkHandler := &vehiclehttp.VehiclesBulkHandler{UC: bulkUc}
+	return vehiclehttp.NewRouter(handler, bulkHandler)
 }
 
 // TestVehicleHandler_CreateVehicle tests the CreateVehicle HTTP handler
 func TestVehicleHandler_CreateVehicle(t *testing.T) {
-	router := newTestRouter()
+	router := NewTestRouter()
 
 	// Valid case
 	t.Run("valid request", func(t *testing.T) {
@@ -79,7 +81,7 @@ func TestVehicleHandler_CreateVehicle(t *testing.T) {
 func TestVehicleHandler_GetVehicle(t *testing.T) {
 
 	// Prepare router with a vehicle
-	router := newTestRouter()
+	router := NewTestRouter()
 	v := domain.Vehicle{
 		VIN:      "1HGCM82633A123456",
 		Year:     2020,
@@ -123,7 +125,7 @@ func TestVehicleHandler_GetVehicle(t *testing.T) {
 func TestVehicleHandler_UpdateVehicle(t *testing.T) {
 
 	// Prepare router with a vehicle
-	router := newTestRouter()
+	router := NewTestRouter()
 	v := domain.Vehicle{
 		VIN:      "1HGCM82633A123456",
 		Year:     2020,
@@ -176,7 +178,7 @@ func TestVehicleHandler_UpdateVehicle(t *testing.T) {
 func TestVehicleHandler_DeleteVehicle(t *testing.T) {
 
 	// Prepare router with a vehicle
-	router := newTestRouter()
+	router := NewTestRouter()
 	v := domain.Vehicle{
 		VIN:      "1HGCM82633A123456",
 		Year:     2020,
@@ -215,7 +217,7 @@ func TestVehicleHandler_DeleteVehicle(t *testing.T) {
 func TestVehicleHandler_ListVehicles(t *testing.T) {
 
 	// Prepare router with vehicles
-	router := newTestRouter()
+	router := NewTestRouter()
 	v1 := domain.Vehicle{
 		VIN:      "VIN12345678901234",
 		Year:     2020,
@@ -258,7 +260,7 @@ func TestVehicleHandler_ListVehicles(t *testing.T) {
 
 	// Empty list case
 	t.Run("list empty vehicles", func(t *testing.T) {
-		router := newTestRouter()
+		router := NewTestRouter()
 		req := httptest.NewRequest(http.MethodGet, "/vehicles", nil)
 		rec := httptest.NewRecorder()
 

@@ -44,14 +44,20 @@ func NewServer(cfg *config) (*Server, error) {
 	}
 	logger.Log.Info("connected to dependencies", slog.String("inspection_url", cfg.InspectionURL), slog.String("pricing_url", cfg.PricingURL))
 	uc := usecase.NewVehicleUC(repo, inspectionProvider, pricingProvider)
+	if err != nil {
+		logger.Log.Error("failed to connect to postgres for bulk repo", slog.String("error", err.Error()))
+	}
+	bulkUc := usecase.NewVehiclesBulkUC(repo, uc)
 	handler := &vehiclehttp.VehicleHandler{UC: uc}
-	mux := vehiclehttp.NewRouter(handler)
+	bulkHandler := &vehiclehttp.VehiclesBulkHandler{UC: bulkUc}
+
+	mux := vehiclehttp.NewRouter(handler, bulkHandler)
 
 	return &Server{
 		httpServer: &http.Server{
 			Addr:              cfg.Address,
 			Handler:           mux,
-			ReadHeaderTimeout: 5 * time.Second,
+			ReadHeaderTimeout: 15 * time.Second,
 		},
 	}, nil
 }

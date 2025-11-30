@@ -58,3 +58,22 @@ func (r *MemoryVehicleRepo) List() ([]*domain.Vehicle, error) {
 	}
 	return result, nil
 }
+
+// SaveBulk saves multiple vehicles to the in-memory store
+func (r *MemoryVehicleRepo) SaveBulk(vb *domain.VehiclesBulk) error {
+	for _, v := range vb.Vehicles {
+		r.data[v.VIN] = v
+	}
+	return nil
+}
+
+// UpdateBulk updates multiple vehicles in the in-memory store
+func (r *MemoryVehicleRepo) UpdateBulk(vb *domain.VehiclesBulk) error {
+	for _, v := range vb.Vehicles {
+		if _, ok := r.data[v.VIN]; !ok {
+			return errors.New("vehicle not found: " + v.VIN)
+		}
+		r.data[v.VIN] = v
+	}
+	return nil
+}

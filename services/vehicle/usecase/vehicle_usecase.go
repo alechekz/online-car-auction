@@ -7,11 +7,12 @@ import (
 
 // VehicleUsecase defines the interface for vehicle-related business logic
 type VehicleUsecase interface {
-	CreateVehicle(v *domain.Vehicle) error
-	GetVehicle(vin string) (*domain.Vehicle, error)
-	UpdateVehicle(v *domain.Vehicle) error
-	DeleteVehicle(vin string) error
-	ListVehicles() ([]*domain.Vehicle, error)
+	Create(v *domain.Vehicle) error
+	Get(vin string) (*domain.Vehicle, error)
+	Update(v *domain.Vehicle) error
+	Delete(vin string) error
+	List() ([]*domain.Vehicle, error)
+	Fetch(v *domain.Vehicle) error
 }
 
 // vehicleUsecase is the implementation of VehicleUsecase interface
@@ -30,8 +31,8 @@ func NewVehicleUC(r repository.VehicleRepository, inspectionProvider InspectionP
 	}
 }
 
-// fetch fetches all necessary data for vehicle processing
-func (uc *vehicleUsecase) fetch(v *domain.Vehicle) error {
+// Fetch fetches all necessary data for vehicle processing
+func (uc *vehicleUsecase) Fetch(v *domain.Vehicle) error {
 
 	// Fetch build data and merge with user's vehicle data
 	bd, err := uc.inspectionProvider.GetBuildData(v.VIN)
@@ -63,8 +64,8 @@ func (uc *vehicleUsecase) fetch(v *domain.Vehicle) error {
 	return nil
 }
 
-// CreateVehicle creates a new vehicle record
-func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
+// Create creates a new vehicle record
+func (uc *vehicleUsecase) Create(v *domain.Vehicle) error {
 
 	// Validate the vehicle data
 	if err := v.Validate(); err != nil {
@@ -72,7 +73,7 @@ func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
 	}
 
 	// Fetch all necessary data for vehicle processing
-	if err := uc.fetch(v); err != nil {
+	if err := uc.Fetch(v); err != nil {
 		return err
 	}
 
@@ -80,8 +81,8 @@ func (uc *vehicleUsecase) CreateVehicle(v *domain.Vehicle) error {
 	return uc.repo.Save(v)
 }
 
-// GetVehicle retrieves a vehicle by its VIN
-func (uc *vehicleUsecase) GetVehicle(vin string) (*domain.Vehicle, error) {
+// Get retrieves a vehicle by its VIN
+func (uc *vehicleUsecase) Get(vin string) (*domain.Vehicle, error) {
 	v, err := uc.repo.FindByVIN(vin)
 	if err != nil {
 		return nil, domain.ErrNotFound
@@ -92,8 +93,8 @@ func (uc *vehicleUsecase) GetVehicle(vin string) (*domain.Vehicle, error) {
 	return v, nil
 }
 
-// UpdateVehicle updates an existing vehicle record
-func (uc *vehicleUsecase) UpdateVehicle(v *domain.Vehicle) error {
+// Update updates an existing vehicle record
+func (uc *vehicleUsecase) Update(v *domain.Vehicle) error {
 
 	// Validate the vehicle data
 	if err := v.Validate(); err != nil {
@@ -101,7 +102,7 @@ func (uc *vehicleUsecase) UpdateVehicle(v *domain.Vehicle) error {
 	}
 
 	// Fetch all necessary data for vehicle processing
-	if err := uc.fetch(v); err != nil {
+	if err := uc.Fetch(v); err != nil {
 		return err
 	}
 
@@ -112,15 +113,15 @@ func (uc *vehicleUsecase) UpdateVehicle(v *domain.Vehicle) error {
 	return nil
 }
 
-// DeleteVehicle deletes a vehicle by its VIN
-func (uc *vehicleUsecase) DeleteVehicle(vin string) error {
+// Delete deletes a vehicle by its VIN
+func (uc *vehicleUsecase) Delete(vin string) error {
 	if err := uc.repo.Delete(vin); err != nil {
 		return domain.ErrNotFound
 	}
 	return nil
 }
 
-// ListVehicles lists all vehicles
-func (uc *vehicleUsecase) ListVehicles() ([]*domain.Vehicle, error) {
+// List lists all vehicles
+func (uc *vehicleUsecase) List() ([]*domain.Vehicle, error) {
 	return uc.repo.List()
 }
